@@ -1,16 +1,29 @@
 # Quiz App
 
-A simple React-based quiz app that fetches trivia questions from the Open Trivia Database API.
+A React-based Quiz Application that allows users to test their knowledge with dynamic trivia questions fetched from the Open Trivia Database API.
 
 ## Features
-- Multiple-choice questions
-- Dynamic scoring
-- Responsive UI built with Tailwind CSS
+
+- **Dynamic Trivia Questions**: Fetch questions in real-time from the Open Trivia Database.
+- **Multiple Categories and Difficulties**: Choose from a variety of question types and difficulty levels.
+- **Interactive Scoring**: Keep track of correct answers and display scores.
+- **Responsive Design**: Built with Tailwind CSS for a sleek, mobile-friendly interface.
 
 ## Tech Stack
-- React
-- Tailwind CSS
-- Open Trivia Database API
+
+- **Frontend**: React.js
+- **Styling**: Tailwind CSS
+- **API**: [Open Trivia Database](https://opentdb.com/api_config.php)
+- **Version Control**: Git and GitHub
+
+## Installation
+
+To set up the project locally, follow these steps:
+
+### Prerequisites
+
+- Node.js and npm installed on your system.
+- Git installed for version control.
 
 ## Getting Started
 1. Clone the repository:
