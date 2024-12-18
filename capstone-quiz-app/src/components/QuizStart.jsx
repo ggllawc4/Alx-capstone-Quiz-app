@@ -28,8 +28,8 @@ function QuizStart({ onStart }) {
   };
 
   return (
-    <div className="p-6 bg-white rounded shadow-md max-w-md mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Start a New Quiz</h1>
+    <div className="p-6 bg-white rounded shadow-md max-w-md mx-auto space-y-6">
+      <h1 className="text-2xl font-bold text-center mb-4">Start a New Quiz</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Category:</label>

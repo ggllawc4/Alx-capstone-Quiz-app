@@ -41,11 +41,22 @@ function App() {
     const current = questions[currentQuestion];
     if (option === current.correct_answer) {
       setScore((prevScore) => prevScore + 1);
+      return true;
     }
+    return false;
+  };
+
+  const handleNext = () => {
     if (currentQuestion + 1 < questions.length) {
       setCurrentQuestion((prevIndex) => prevIndex + 1);
     } else {
       setQuizComplete(true);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentQuestion > 0) {
+      setCurrentQuestion((prevIndex) => prevIndex - 1);
     }
   };
 
@@ -56,23 +67,17 @@ function App() {
 
   if (loading) return <LoadingSpinner />;
 
-  if (quizComplete) {
-    return (
-      <ScoreSummary
-        score={score}
-        total={questions.length}
-        onRestart={restartQuiz}
-      />
-    );
-  }
-
+  if (quizComplete) return <ScoreSummary score={score} total={questions.length} onRestart={restartQuiz} />;
   if (questions.length > 0) {
-    const current = questions[currentQuestion];
     return (
       <QuestionCard
-        question={current.question}
-        options={[...current.incorrect_answers, current.correct_answer].sort()}
+        question={questions[currentQuestion].question}
+        options={[...questions[currentQuestion].incorrect_answers, questions[currentQuestion].correct_answer].sort()}
         onAnswer={handleAnswer}
+        onNext={handleNext}
+        onPrevious={handlePrevious}
+        current={currentQuestion + 1}
+        total={questions.length}
       />
     );
   }

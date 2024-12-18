@@ -17,12 +17,17 @@ function App() {
     try {
       setLoading(true);
       const data = await fetchQuestions(amount, category, difficulty);
+      if (data.length === 0) {
+        alert("No questions available for the selected settings. Please try again.");
+        setLoading(false);
+        return;
+      }
       setQuestions(data);
       setCurrentQuestion(0);
       setScore(0);
       setQuizComplete(false);
     } catch (error) {
-      alert("Failed to load quiz questions. Please try again.");
+      alert("Failed to load quiz questions. Please check your internet connection.");
     } finally {
       setLoading(false);
     }
@@ -32,11 +37,22 @@ function App() {
     const current = questions[currentQuestion];
     if (option === current.correct_answer) {
       setScore((prevScore) => prevScore + 1);
+      return true;
     }
+    return false;
+  };
+
+  const handleNext = () => {
     if (currentQuestion + 1 < questions.length) {
       setCurrentQuestion((prevIndex) => prevIndex + 1);
     } else {
       setQuizComplete(true);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentQuestion > 0) {
+      setCurrentQuestion((prevIndex) => prevIndex - 1);
     }
   };
 
@@ -50,14 +66,15 @@ function App() {
   if (questions.length > 0) {
     return (
       <div>
-        <h1 className="text-4xl font-bold text-center mt-8 mb-6">Quiz App</h1>
+        <h1 className="text-4xl font-bold text-center mt-8 mb-6">Welcome to the Quiz App</h1>
         <QuestionCard
           question={questions[currentQuestion].question}
-          options={[
-            ...questions[currentQuestion].incorrect_answers,
-            questions[currentQuestion].correct_answer,
-          ].sort()}
+          options={[...questions[currentQuestion].incorrect_answers, questions[currentQuestion].correct_answer].sort()}
           onAnswer={handleAnswer}
+          onNext={handleNext}
+          onPrevious={handlePrevious}
+          current={currentQuestion + 1}
+          total={questions.length}
         />
       </div>
     );
