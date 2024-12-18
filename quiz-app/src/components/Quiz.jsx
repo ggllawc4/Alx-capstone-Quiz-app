@@ -4,6 +4,7 @@ const Quiz = ({ config }) => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
+  const [answers, setAnswers] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // Fetch questions
@@ -29,15 +30,15 @@ const Quiz = ({ config }) => {
   // Handle answer selection
   const handleAnswer = (answer) => {
     const currentQuestion = questions[currentQuestionIndex];
-    if (answer === currentQuestion.correct_answer) {
-      setScore(score + 1);
-    }
+    const isCorrect = answer === currentQuestion.correct_answer;
+    
+    setAnswers ([...answers, { questions: currentQuestion.question, isCorrect, correctAnswer: currentQuestion.correct_answer }]);
+    if (isCorrect) setScore(score + 1);
 
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
     } else {
-      alert(`Quiz complete! Your score is ${score + 1}/${questions.length}`);
-      window.location.reload(); // Reset quiz
+      onQuizEnd({ score, total: questions.length, answers }) // Reset quiz
     }
   };
 

@@ -11,7 +11,7 @@ const QuizStart = ({ categories }) => {
     } else {
       alert('Please fill out all fields!');
     }
-  };
+  }
 
   return (
     <div className="max-w-md w-full bg-white rounded-lg shadow-md p-6">
@@ -65,7 +65,12 @@ const QuizStart = ({ categories }) => {
       >
         Start Quiz
       </button>
-    </div>
+      
+      <button 
+          onClick={() => setShowHistory(true)}
+          className="mt-4 w-full bg-gray-500 text-white py-2 rounded-md hover:bg-gray-600">
+            View Quiz History </button>
+    </div>  
   );
 };
 
