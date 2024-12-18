@@ -7,7 +7,7 @@ const QuizStart = ({ categories }) => {
 
   const startQuiz = () => {
     if (selectedCategory && difficulty && questionCount) {
-      console.log('Starting quiz with:', { selectedCategory, difficulty, questionCount });
+      onStartQuiz.log({selectedCategory, difficulty, questionCount});
     } else {
       alert('Please fill out all fields!');
     }

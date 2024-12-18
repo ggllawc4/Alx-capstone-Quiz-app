@@ -1,10 +1,12 @@
 import './App.css'
 import React, {useState, useEffect} from 'react';
 import Quizstart from './components/Quizstart';
+import Quiz from './components/Quiz';
 
 const App = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [quizConfig, setQuizConfig] = useState(null);
 
   // Fetch quiz categories from API
   useEffect(() => {
@@ -23,13 +25,22 @@ const App = () => {
     fetchCategories();
   }, []);
 
+  // Start quiz
+  const handleStartQuiz = (config) => {
+    setQuizConfig(config);
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-50">
       <h1 className="text-4xl font-bold mb-6 text-blue-600">Quiz App</h1>
-      {loading ? (
+      {quizConfig ? (
+        <Quiz config={quizConfig} />
+      ) : (
+      loading ? (
         <p className="text-lg text-gray-700">Loading categories...</p>
       ) : (
-        <Quizstart categories={categories} />
+        <Quizstart categories={categories} onStartQuiz={handleStartQuiz} />
+      )
       )}
     </div>
   );
