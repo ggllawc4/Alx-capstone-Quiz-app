@@ -11,21 +11,21 @@ function QuestionCard({ question, options, onAnswer, onNext, onPrevious, current
   };
 
   return (
-    <div className="p-6 bg-stone-500 rounded shadow-md max-w-md mx-auto">
-      <div className="mb-4 text-right">
-        <p className="text-sm text-grey-600">Question {current} of {total}</p>
+    <div className="p-6 bg-gray-700 rounded shadow-md max-w-lg mx-auto">
+      <p className="text-sm text-gray-200 mb-3">Question {current} of {total}</p>
+      <div className="mb-4 text-center">
+        <h2 className="text-lg text-white font-bold mb-4">{question}</h2>
       </div>
-      <h2 className="text-lg font-bold mb-4">{question}</h2>
-      <div className="grid gap-3">
+      <div className="grid gap-4">
         {options.map((option, index) => (
           <button
             key={index}
-            className={`p-2 border rounded bg-black ${
+            className={`p-2 border rounded ${
               selected === option
                 ? feedback === "Correct!"
-                  ? "bg-green-200"
-                  : "bg-red-200"
-                : "bg-gray-100 hover:bg-gray-700"
+                  ? "bg-green-500"
+                  : "bg-red-500"
+                : "bg-cyan-500 hover:bg-blue-300"
             }`}
             onClick={() => handleAnswer(option)}
             disabled={selected !== null}
@@ -37,12 +37,12 @@ function QuestionCard({ question, options, onAnswer, onNext, onPrevious, current
       {selected && <p className="mt-4 text-lg font-bold">{feedback}</p>}
       <div className="flex justify-between mt-4">
         {current > 1 && (
-          <button onClick={onPrevious} className="p-2 bg-brown-950 rounded">
+          <button onClick={onPrevious} className="p-2 bg-brown-950 text-white rounded">
             Previous
           </button>
         )}
         {current < total && (
-          <button onClick={onNext} className="p-2 bg-blue-500 text-white rounded">
+          <button onClick={onNext} className="p-2 bg-blue-600 text-white rounded">
             Next
           </button>
         )}

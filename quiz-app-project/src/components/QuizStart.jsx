@@ -28,10 +28,10 @@ function QuizStart({ onStart }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Category:</label>
-        <select name="category" onChange={handleInputChange} value={formData.category}>
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <div className="space-y-2">
+        <label className="block text-md font-medium">Category:</label>
+        <select name="category" className="w-full p-3 border rounded" onChange={handleInputChange} value={formData.category}>
           <option value="">Any Category</option>
           {categories.map((cat) => (
             <option key={cat.id} value={cat.id}>
@@ -41,16 +41,17 @@ function QuizStart({ onStart }) {
         </select>
       </div>
       <div className="mt-4">
-        <label>Difficulty:</label>
-        <select name="difficulty" onChange={handleInputChange} value={formData.difficulty}>
+        <label className="block text-md font-medium">Difficulty:</label>
+        <select name="difficulty" className="w-full p-3 border rounded" onChange={handleInputChange} value={formData.difficulty}>
           <option value="easy">Easy</option>
           <option value="medium">Medium</option>
           <option value="hard">Hard</option>
         </select>
       </div>
       <div className="mt-4">
-        <label>Number of Questions:</label>
+        <label className="block text-md font-medium">Number of Questions:</label>
         <input
+          className="w-full p-3 border rounded"
           type="number"
           name="amount"
           min="1"
