@@ -3,6 +3,7 @@ import "./App.css";
 import QuizStart from "./components/QuizStart";
 import QuestionCard from "./components/QuestionCard";
 import ScoreSummary from "./components/ScoreSummary";
+import QuizHistory from "./components/QuizHistory"; // Import QuizHistory
 import LoadingSpinner from "./components/LoadingSpinner";
 import { fetchQuestions } from "./services/triviaAPI";
 
@@ -12,17 +13,25 @@ function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
   const [quizComplete, setQuizComplete] = useState(false);
+  const [quizHistory, setQuizHistory] = useState(
+    JSON.parse(localStorage.getItem("quizHistory")) || []
+  );
 
   const startQuiz = async ({ category, difficulty, amount }) => {
     try {
       setLoading(true);
       const data = await fetchQuestions(amount, category, difficulty);
       if (data.length === 0) {
-        alert("No questions available for the selected settings. Please try again.");
+        alert("No questions available. Please try different settings.");
         setLoading(false);
         return;
       }
-      setQuestions(data);
+      setQuestions(
+        data.map((q) => ({
+          ...q,
+          userAnswer: null,
+        }))
+      );
       setCurrentQuestion(0);
       setScore(0);
       setQuizComplete(false);
@@ -33,13 +42,26 @@ function App() {
     }
   };
 
+  const saveQuizResult = (score, total, category, difficulty) => {
+    const newResult = {
+      score,
+      total,
+      category,
+      difficulty,
+      date: new Date().toLocaleString(),
+    };
+    const updatedHistory = [newResult, ...quizHistory];
+    setQuizHistory(updatedHistory);
+    localStorage.setItem("quizHistory", JSON.stringify(updatedHistory));
+  };
+
   const handleAnswer = (option) => {
     const current = questions[currentQuestion];
-    if (option === current.correct_answer) {
-      setScore((prevScore) => prevScore + 1);
-      return true;
-    }
-    return false;
+    const isCorrect = option === current.correct_answer;
+    current.userAnswer = option;
+
+    if (isCorrect) setScore((prevScore) => prevScore + 1);
+    return isCorrect;
   };
 
   const handleNext = () => {
@@ -47,13 +69,27 @@ function App() {
       setCurrentQuestion((prevIndex) => prevIndex + 1);
     } else {
       setQuizComplete(true);
+      saveQuizResult(
+        score,
+        questions.length,
+        questions[0].category || "Any Category",
+        questions[0].difficulty
+      );
     }
   };
 
   const handlePrevious = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion((prevIndex) => prevIndex - 1);
-    }
+    if (currentQuestion > 0) setCurrentQuestion((prevIndex) => prevIndex - 1);
+  };
+
+  const finishQuiz = () => {
+    setQuizComplete(true);
+    saveQuizResult(
+      score,
+      questions.length,
+      questions[0].category || "Any Category",
+      questions[0].difficulty
+    );
   };
 
   const restartQuiz = () => {
@@ -62,21 +98,31 @@ function App() {
   };
 
   if (loading) return <LoadingSpinner />;
-  if (quizComplete) return <ScoreSummary score={score} total={questions.length} onRestart={restartQuiz} />;
+  if (quizComplete) {
+    return (
+      <ScoreSummary
+        score={score}
+        total={questions.length}
+        questions={questions}
+        onRestart={restartQuiz}
+      />
+    );
+  }
   if (questions.length > 0) {
     return (
-      <div>
-        <h1 className="text-4xl font-bold text-center mt-8 mb-6">Welcome to the Quiz App</h1>
-        <QuestionCard
-          question={questions[currentQuestion].question}
-          options={[...questions[currentQuestion].incorrect_answers, questions[currentQuestion].correct_answer].sort()}
-          onAnswer={handleAnswer}
-          onNext={handleNext}
-          onPrevious={handlePrevious}
-          current={currentQuestion + 1}
-          total={questions.length}
-        />
-      </div>
+      <QuestionCard
+        question={questions[currentQuestion].question}
+        options={[
+          ...questions[currentQuestion].incorrect_answers,
+          questions[currentQuestion].correct_answer,
+        ].sort()}
+        onAnswer={handleAnswer}
+        onNext={handleNext}
+        onPrevious={handlePrevious}
+        onFinish={finishQuiz}
+        current={currentQuestion + 1}
+        total={questions.length}
+      />
     );
   }
 
@@ -84,6 +130,7 @@ function App() {
     <div>
       <h1 className="text-4xl font-bold text-center mt-8 mb-6">Welcome to the Quiz App</h1>
       <QuizStart onStart={startQuiz} />
+      <QuizHistory history={quizHistory} />
     </div>
   );
 }

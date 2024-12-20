@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-function QuestionCard({ question, options, onAnswer, onNext, onPrevious, current, total }) {
+function QuestionCard({ question, options, onAnswer, onNext, onPrevious, onFinish, current, total }) {
   const [selected, setSelected] = useState(null);
   const [feedback, setFeedback] = useState("");
+
+  useEffect(() => {
+    setSelected(null);
+    setFeedback("");
+  }, [current]);
 
   const handleAnswer = (option) => {
     setSelected(option);
@@ -34,18 +39,30 @@ function QuestionCard({ question, options, onAnswer, onNext, onPrevious, current
           </button>
         ))}
       </div>
-      {selected && <p className="mt-4 text-lg font-bold">{feedback}</p>}
+      {selected && <p className="mt-4 text-lg font-bold text-white">{feedback}</p>}
       <div className="flex justify-between mt-4">
         {current > 1 && (
-          <button onClick={onPrevious} className="p-2 bg-brown-950 text-white rounded">
+          <button
+            onClick={onPrevious}
+            className="p-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+          >
             Previous
           </button>
         )}
         {current < total && (
-          <button onClick={onNext} className="p-2 bg-blue-600 text-white rounded">
+          <button
+            onClick={onNext}
+            className="p-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
             Next
           </button>
         )}
+        <button
+          onClick={onFinish}
+          className="p-2 bg-red-600 text-white rounded hover:bg-red-700"
+        >
+          Finish Quiz
+        </button>
       </div>
     </div>
   );
