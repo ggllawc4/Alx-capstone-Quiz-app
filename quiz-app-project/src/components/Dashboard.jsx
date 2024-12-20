@@ -1,6 +1,6 @@
 import React from "react";
 
-function Dashboard({ history, onStartNewQuiz, onBack }) {
+function Dashboard({ history, onStartNewQuiz }) {
   if (!history || history.length === 0) {
     return (
       <div className="p-6 bg-gray-700 text-white rounded shadow-md max-w-lg mx-auto">
@@ -11,12 +11,6 @@ function Dashboard({ history, onStartNewQuiz, onBack }) {
           className="mt-4 p-3 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
           Start New Quiz
-        </button>
-        <button
-          onClick={onBack}
-          className="mt-4 ml-2 p-3 bg-gray-500 text-white rounded hover:bg-gray-600"
-        >
-          Back
         </button>
       </div>
     );
@@ -69,18 +63,12 @@ function Dashboard({ history, onStartNewQuiz, onBack }) {
           </tbody>
         </table>
       </div>
-      <div className="mt-6 flex justify-between">
+      <div className="mt-6 flex justify-center">
         <button
           onClick={onStartNewQuiz}
           className="p-3 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
           Start New Quiz
-        </button>
-        <button
-          onClick={onBack}
-          className="p-3 bg-gray-500 text-white rounded hover:bg-gray-600"
-        >
-          Back
         </button>
       </div>
     </div>
