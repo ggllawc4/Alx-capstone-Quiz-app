@@ -1,6 +1,6 @@
 import React from "react";
 
-function ScoreSummary({ score, total, questions, onRestart, onBack }) {
+function ScoreSummary({ score, total, questions, onBack }) {
   return (
     <div className="p-6 bg-gray-700 text-white rounded shadow-md max-w-lg mx-auto">
       <h1 className="text-2xl font-bold mb-4">Quiz Completed</h1>
@@ -20,18 +20,12 @@ function ScoreSummary({ score, total, questions, onRestart, onBack }) {
           </div>
         ))}
       </div>
-      <div className="mt-6 flex justify-between">
+      <div className="mt-6 flex justify-center">
         <button
           onClick={onBack}
-          className="p-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+          className="p-3 bg-blue-500 text-white rounded hover:bg-blue-600"
         >
-          Back to Main Menu
-        </button>
-        <button
-          onClick={onRestart}
-          className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Retake Quiz
+          Back to Main Page
         </button>
       </div>
     </div>

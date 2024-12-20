@@ -78,11 +78,6 @@ function App() {
     localStorage.setItem("quizHistory", JSON.stringify(updatedHistory));
   };
 
-  const restartQuiz = () => {
-    setQuestions([]);
-    setQuizComplete(false);
-  };
-
   const goToMainMenu = () => {
     setQuestions([]); // Clear quiz questions
     setQuizComplete(false); // Reset quiz completion state
@@ -94,7 +89,6 @@ function App() {
       <Dashboard
         history={quizHistory}
         onStartNewQuiz={() => setViewDashboard(false)}
-        onBack={() => setViewDashboard(false)}
       />
     );
   }
@@ -104,8 +98,7 @@ function App() {
         score={score}
         total={questions.length}
         questions={questions}
-        onRestart={restartQuiz}
-        onBack={goToMainMenu}
+        onBack={goToMainMenu} // Navigate to QuizStart
       />
     );
   }
