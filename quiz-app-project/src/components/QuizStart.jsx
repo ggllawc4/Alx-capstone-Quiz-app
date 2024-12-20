@@ -34,11 +34,18 @@ function QuizStart({ onStart }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-6 max-w-md mx-auto p-6 bg-gray-700 shadow-md rounded lg:max-w-lg"
+    >
       {error && <p className="text-red-500">{error}</p>}
+
       <div className="space-y-2">
-        <label className="block text-md font-medium">Category:</label>
+        <label htmlFor="category" className="block text-md font-medium">
+          Category:
+        </label>
         <select
+          id="category"
           name="category"
           className="w-full p-3 border rounded"
           onChange={handleInputChange}
@@ -52,9 +59,13 @@ function QuizStart({ onStart }) {
           ))}
         </select>
       </div>
+
       <div className="mt-4">
-        <label className="block text-md font-medium">Difficulty:</label>
+        <label htmlFor="difficulty" className="block text-md font-medium">
+          Difficulty:
+        </label>
         <select
+          id="difficulty"
           name="difficulty"
           className="w-full p-3 border rounded"
           onChange={handleInputChange}
@@ -65,9 +76,13 @@ function QuizStart({ onStart }) {
           <option value="hard">Hard</option>
         </select>
       </div>
+
       <div className="mt-4">
-        <label className="block text-md font-medium">Number of Questions:</label>
+        <label htmlFor="amount" className="block text-md font-medium">
+          Number of Questions:
+        </label>
         <input
+          id="amount"
           type="number"
           name="amount"
           className="w-full p-3 border rounded"
@@ -77,7 +92,11 @@ function QuizStart({ onStart }) {
           onChange={handleInputChange}
         />
       </div>
-      <button type="submit" className="mt-4 p-3 bg-blue-500 text-white rounded hover:bg-blue-600">
+
+      <button
+        type="submit"
+        className="w-full p-3 bg-blue-500 text-white rounded hover:bg-blue-600 sm:w-auto sm:px-6 sm:py-3"
+      >
         Start Quiz
       </button>
     </form>
