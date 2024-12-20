@@ -3,6 +3,7 @@ import "./App.css";
 import QuizStart from "./components/QuizStart";
 import QuestionCard from "./components/QuestionCard";
 import ScoreSummary from "./components/ScoreSummary";
+import Footer from "./components/Footer";
 // import QuizHistory from "./components/QuizHistory";
 import Dashboard from "./components/Dashboard";
 import LoadingSpinner from "./components/LoadingSpinner";
@@ -121,15 +122,18 @@ function App() {
   }
 
   return (
-    <div>
-      <h1 className="text-4xl font-bold text-center mt-8 mb-6">Welcome to the Quiz App</h1>
-      <button
-        onClick={() => setViewDashboard(true)}
-        className="mb-4 p-3 bg-green-500 text-white rounded hover:bg-green-600"
-      >
-        View Dashboard
-      </button>
-      <QuizStart onStart={startQuiz} />
+    <div className="flex flex-col min-h-screen">
+      <main className="flex-grow">
+        <h1 className="text-4xl font-bold text-center mt-8 mb-6">Welcome to the Quiz App</h1>
+        <button
+          onClick={() => setViewDashboard(true)}
+          className="mb-4 p-3 bg-green-500 text-white rounded hover:bg-green-600"
+        >
+          View Dashboard
+        </button>
+        <QuizStart onStart={startQuiz} />
+      </main>
+      <Footer />
     </div>
   );
 }
