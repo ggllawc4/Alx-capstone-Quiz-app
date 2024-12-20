@@ -1,6 +1,6 @@
 # **Quiz App**
 
-Welcome to the **Quiz App**! This application allows users to test their knowledge with quizzes on various topics. Built using **React**, **TailwindCSS**, and the **Open Trivia Database API**, the app features a responsive design, real-time score tracking, and a user dashboard for quiz performance.
+Welcome to the **Quiz App**! This application allows users to test their knowledge with quizzes on various topics. And to also have fun with it during their leisure time. Built using **React**, **TailwindCSS**, and the **Open Trivia Database API**, the app features a responsive design, real-time score tracking, and a user dashboard for quiz performance.
 
 ---
 
