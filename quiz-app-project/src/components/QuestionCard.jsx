@@ -10,8 +10,8 @@ function QuestionCard({ question, options, onAnswer, onNext, onPrevious, onFinis
   }, [current]);
 
   const handleAnswer = (option) => {
+    const isCorrect = onAnswer(option); // Get the correctness status
     setSelected(option);
-    const isCorrect = onAnswer(option);
     setFeedback(isCorrect ? "Correct!" : "Incorrect!");
   };
 
@@ -49,20 +49,21 @@ function QuestionCard({ question, options, onAnswer, onNext, onPrevious, onFinis
             Previous
           </button>
         )}
-        {current < total && (
+        {current < total ? (
           <button
             onClick={onNext}
             className="p-2 bg-blue-600 text-white rounded hover:bg-blue-700"
           >
             Next
           </button>
+        ) : (
+          <button
+            onClick={onFinish}
+            className="p-2 bg-red-600 text-white rounded hover:bg-red-700"
+          >
+            Finish Quiz
+          </button>
         )}
-        <button
-          onClick={onFinish}
-          className="p-2 bg-red-600 text-white rounded hover:bg-red-700"
-        >
-          Finish Quiz
-        </button>
       </div>
     </div>
   );
