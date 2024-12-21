@@ -124,7 +124,7 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-grow">
-        <h1 className="text-4xl font-bold text-center mt-8 mb-6">Welcome to the Quiz App</h1>
+        <h1 className="text-4xl font-bold text-center mt-8 mb-6 text-white">Welcome to the Quiz App</h1>
         <button
           onClick={() => setViewDashboard(true)}
           className="mb-4 p-3 bg-green-500 text-white rounded hover:bg-green-600"

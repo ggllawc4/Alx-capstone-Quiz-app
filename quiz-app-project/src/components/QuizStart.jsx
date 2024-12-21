@@ -41,7 +41,7 @@ function QuizStart({ onStart }) {
       {error && <p className="text-red-500">{error}</p>}
 
       <div className="space-y-2">
-        <label htmlFor="category" className="block text-md font-medium">
+        <label htmlFor="category" className="block text-md font-medium text-white">
           Category:
         </label>
         <select
@@ -61,7 +61,7 @@ function QuizStart({ onStart }) {
       </div>
 
       <div className="mt-4">
-        <label htmlFor="difficulty" className="block text-md font-medium">
+        <label htmlFor="difficulty" className="block text-md font-medium text-white">
           Difficulty:
         </label>
         <select
@@ -78,7 +78,7 @@ function QuizStart({ onStart }) {
       </div>
 
       <div className="mt-4">
-        <label htmlFor="amount" className="block text-md font-medium">
+        <label htmlFor="amount" className="block text-md font-medium text-white">
           Number of Questions:
         </label>
         <input
