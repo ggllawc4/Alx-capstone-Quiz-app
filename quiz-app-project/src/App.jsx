@@ -48,12 +48,25 @@ function App() {
 
   const handleAnswer = (option) => {
     const current = questions[currentQuestion];
-    const isCorrect = option === current.correct_answer; // Check if the answer is correct
-    current.userAnswer = option; // Store the user's answer
-    if (isCorrect) {
-      setScore((prevScore) => prevScore + 1); // Increment score if correct
+    const isCorrect = option === current.correct_answer;
+  
+    // Prevent multiple scoring by tracking if the question was already answered correctly
+    const wasCorrectBefore = current.userAnswer === current.correct_answer;
+  
+    // Update the user's answer
+    current.userAnswer = option;
+  
+    // If the user selects the correct answer for the first time, increment the score
+    if (isCorrect && !wasCorrectBefore) {
+      setScore((prevScore) => prevScore + 1);
     }
-    return isCorrect; // Return correctness status for feedback
+  
+    // If the user changes a previously correct answer to incorrect, decrement the score
+    if (!isCorrect && wasCorrectBefore) {
+      setScore((prevScore) => prevScore - 1);
+    }
+  
+    return isCorrect;
   };
 
   const finishQuiz = () => {

@@ -78,7 +78,7 @@ Check out the live version of the app here: [Live Demo Link](https://alx-capston
 ## **App Screenshots**
 
 ### **1. Quiz Start Page**
-![Quiz Start Page](/quiz-app-project/src/images/StartQuiz.png)
+![Quiz Start Page](/quiz-app-project/src/images/QuizStart.png)
 
 ### **2. Question Card**
 ![Question Card](/quiz-app-project/src/images/QuestionCard.png)
