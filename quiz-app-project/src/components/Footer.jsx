@@ -2,7 +2,7 @@ import React from "react";
 
 function Footer() {
   return (
-    <footer className="bg-gray-800 text-white text-center py-4 mt-8">
+    <footer className="text-white text-center py-4 mt-3">
       <p className="text-sm">
         Developed by <strong>Grace Lawrence</strong> with OTDB API.{" "}
         <a

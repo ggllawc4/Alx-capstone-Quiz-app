@@ -6,23 +6,23 @@ function QuestionCard({ question, options, onAnswer, onNext, onPrevious, onFinis
   const [timeLeft, setTimeLeft] = useState(15); // 15-second timer
 
   useEffect(() => {
-    // Reset timer and selection when question changes
+    // Reset selection, feedback, and timer for each new question
     setSelected(null);
     setFeedback("");
     setTimeLeft(15);
 
     const timer = setInterval(() => {
-      setTimeLeft((prevTime) => {
-        if (prevTime <= 1) {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
           clearInterval(timer);
           handleAutoSubmit();
           return 0;
         }
-        return prevTime - 1;
+        return prev - 1;
       });
     }, 1000);
 
-    return () => clearInterval(timer); // Cleanup timer on unmount
+    return () => clearInterval(timer);
   }, [current]);
 
   const handleAnswer = (option) => {
@@ -33,69 +33,71 @@ function QuestionCard({ question, options, onAnswer, onNext, onPrevious, onFinis
 
   const handleAutoSubmit = () => {
     if (!selected) {
-      onAnswer(null); // Auto-submit with no answer
+      onAnswer(null); // Auto-submit as unanswered
     }
     if (current < total) {
-      onNext();
+      onNext();  // Auto-advance if time runs out
     } else {
       onFinish();
     }
   };
 
   return (
-    <div className="p-6 bg-gray-700 rounded shadow-md max-w-lg mx-auto">
-      <div className="flex justify-between mb-3">
-        <p className="text-sm text-gray-200">Question {current} of {total}</p>
-        <p className="text-sm text-red-500">Time Left: {timeLeft}s</p>
-      </div>
-      <div className="mb-4 text-center">
-        <h2 className="text-lg text-white font-bold mb-4">{question}</h2>
-      </div>
-      <div className="grid gap-4">
-        {options.map((option, index) => (
-          <button
-            key={index}
-            className={`p-2 border rounded ${
-              selected === option
-                ? feedback === "Correct!"
-                  ? "bg-green-500"
-                  : "bg-red-500"
-                : "bg-cyan-500 hover:bg-blue-300"
-            }`}
-            onClick={() => handleAnswer(option)}
-            disabled={selected !== null}
-          >
-            {option}
-          </button>
-        ))}
-      </div>
-      {selected && <p className="mt-4 text-lg font-bold text-white">{feedback}</p>}
-      <div className="flex justify-between mt-4">
-        {current > 1 && (
-          <button
-            onClick={onPrevious}
-            className="p-2 bg-gray-500 text-white rounded hover:bg-gray-600"
-          >
-            Previous
-          </button>
-        )}
-        {current < total ? (
-          <button
-            onClick={onNext}
-            className="p-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            disabled={timeLeft === 0}
-          >
-            Next
-          </button>
-        ) : (
-          <button
-            onClick={onFinish}
-            className="p-2 bg-red-600 text-white rounded hover:bg-red-700"
-            disabled={timeLeft === 0}
-          >
-            Finish Quiz
-          </button>
-        )}
+    <div className="min-h-screen bg-gray-900 flex flex-col justify-center items-center animate-fade-in">
+      <div className="p-6 bg-gray-800 rounded shadow-md max-w-lg w-full mx-4">
+        <div className="flex justify-between mb-3">
+          <p className="text-sm text-gray-400">Question {current} of {total}</p>
+          <p className="text-sm text-red-400">Time Left: {timeLeft}s</p>
+        </div>
+        <div className="mb-4 text-center">
+          <h2 className="text-xl text-white font-bold">{question}</h2>
+        </div>
+        <div className="grid gap-4">
+          {options.map((option, index) => (
+            <button
+              key={index}
+              className={`p-3 border rounded ${
+                selected === option
+                  ? feedback === "Correct!"
+                    ? "bg-green-500"
+                    : "bg-red-500"
+                  : "bg-cyan-500 hover:bg-blue-300"
+              }`}
+              onClick={() => handleAnswer(option)}
+              disabled={selected !== null}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+        {selected && <p className="mt-4 text-lg font-bold text-white">{feedback}</p>}
+        
+        {/* Navigation Buttons */}
+        <div className="flex justify-between mt-6">
+          {current > 1 && (
+            <button
+              onClick={onPrevious}
+              className="p-2 bg-gray-600 text-white rounded hover:bg-gray-700 hover:scale-105 transition-transform"
+            >
+              Previous
+            </button>
+          )}
+          {current < total ? (
+            <button
+              onClick={onNext}
+              className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 hover:scale-105 transition-transform"
+            >
+              Next
+            </button>
+          ) : (
+            <button
+              onClick={onFinish}
+              className="p-2 bg-red-500 text-white rounded hover:bg-red-600 hover:scale-105 transition-transform"
+            >
+              Finish Quiz
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

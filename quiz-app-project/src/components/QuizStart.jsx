@@ -36,7 +36,7 @@ function QuizStart({ onStart }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-6 max-w-md mx-auto p-6 bg-gray-700 shadow-md rounded lg:max-w-lg"
+      className="space-y-6 max-w-md mx-auto p-6 bg-gray-700 shadow-md rounded lg:max-w-lg animate-fade-in"
     >
       {error && <p className="text-red-500">{error}</p>}
 
@@ -47,7 +47,7 @@ function QuizStart({ onStart }) {
         <select
           id="category"
           name="category"
-          className="w-full p-3 border rounded"
+          className="w-full p-3 border rounded hover:scale-105 transition-transform"
           onChange={handleInputChange}
           value={formData.category}
         >
@@ -67,7 +67,7 @@ function QuizStart({ onStart }) {
         <select
           id="difficulty"
           name="difficulty"
-          className="w-full p-3 border rounded"
+          className="w-full p-3 border rounded hover:scale-105 transition-transform"
           onChange={handleInputChange}
           value={formData.difficulty}
         >
@@ -85,7 +85,7 @@ function QuizStart({ onStart }) {
           id="amount"
           type="number"
           name="amount"
-          className="w-full p-3 border rounded"
+          className="w-full p-3 border rounded hover:scale-105 transition-transform"
           min="1"
           max="50"
           value={formData.amount}
@@ -95,7 +95,7 @@ function QuizStart({ onStart }) {
 
       <button
         type="submit"
-        className="w-full p-3 bg-blue-500 text-white rounded hover:bg-blue-600 sm:w-auto sm:px-6 sm:py-3"
+        className="w-full p-3 bg-blue-500 text-white rounded hover:bg-blue-600 hover:scale-105 transition-transform sm:w-auto sm:px-6 sm:py-3"
       >
         Start Quiz
       </button>
