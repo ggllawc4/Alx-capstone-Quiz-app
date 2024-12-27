@@ -3,13 +3,15 @@ import React, { useState, useEffect } from "react";
 function QuestionCard({ question, options, onAnswer, onNext, onPrevious, onFinish, current, total }) {
   const [selected, setSelected] = useState(null);
   const [feedback, setFeedback] = useState("");
-  const [timeLeft, setTimeLeft] = useState(15); // 15-second timer
+  const [timeLeft, setTimeLeft] = useState(15);  // 15-second timer
+  const [disableButtons, setDisableButtons] = useState(false);  // For timer edge case
 
   useEffect(() => {
-    // Reset selection, feedback, and timer for each new question
+    // Reset state for each new question
     setSelected(null);
     setFeedback("");
     setTimeLeft(15);
+    setDisableButtons(false);
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
@@ -26,20 +28,18 @@ function QuestionCard({ question, options, onAnswer, onNext, onPrevious, onFinis
   }, [current]);
 
   const handleAnswer = (option) => {
+    if (disableButtons) return;  // Prevent selection if timer expired
     const isCorrect = onAnswer(option);
     setSelected(option);
     setFeedback(isCorrect ? "Correct!" : "Incorrect!");
   };
 
   const handleAutoSubmit = () => {
+    setDisableButtons(true);
     if (!selected) {
-      onAnswer(null); // Auto-submit as unanswered
+      onAnswer(null);  // Auto-submit as unanswered if no selection
     }
-    if (current < total) {
-      onNext();  // Auto-advance if time runs out
-    } else {
-      onFinish();
-    }
+    setTimeout(onNext, 1000);  // Move to next question after 1 second
   };
 
   return (
@@ -47,11 +47,15 @@ function QuestionCard({ question, options, onAnswer, onNext, onPrevious, onFinis
       <div className="p-6 bg-gray-800 rounded shadow-md max-w-lg w-full mx-4">
         <div className="flex justify-between mb-3">
           <p className="text-sm text-gray-400">Question {current} of {total}</p>
-          <p className="text-sm text-red-400">Time Left: {timeLeft}s</p>
+          <p className={`text-sm ${timeLeft <= 5 ? "text-red-400" : "text-green-400"}`}>
+            Time Left: {timeLeft}s
+          </p>
         </div>
+        
         <div className="mb-4 text-center">
           <h2 className="text-xl text-white font-bold">{question}</h2>
         </div>
+
         <div className="grid gap-4">
           {options.map((option, index) => (
             <button
@@ -62,14 +66,15 @@ function QuestionCard({ question, options, onAnswer, onNext, onPrevious, onFinis
                     ? "bg-green-500"
                     : "bg-red-500"
                   : "bg-cyan-500 hover:bg-blue-300"
-              }`}
+              } ${disableButtons ? "opacity-50 cursor-not-allowed" : ""}`}
               onClick={() => handleAnswer(option)}
-              disabled={selected !== null}
+              disabled={disableButtons || selected !== null}
             >
               {option}
             </button>
           ))}
         </div>
+        
         {selected && <p className="mt-4 text-lg font-bold text-white">{feedback}</p>}
         
         {/* Navigation Buttons */}
@@ -77,7 +82,8 @@ function QuestionCard({ question, options, onAnswer, onNext, onPrevious, onFinis
           {current > 1 && (
             <button
               onClick={onPrevious}
-              className="p-2 bg-gray-600 text-white rounded hover:bg-gray-700 hover:scale-105 transition-transform"
+              className="p-2 bg-gray-600 hover:bg-gray-950 text-white rounded hover:scale-105 transition-transform"
+              disabled={disableButtons}  // Disable previous during auto-submit
             >
               Previous
             </button>
@@ -85,14 +91,20 @@ function QuestionCard({ question, options, onAnswer, onNext, onPrevious, onFinis
           {current < total ? (
             <button
               onClick={onNext}
-              className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 hover:scale-105 transition-transform"
+              disabled={!selected}  // Disable if no option is selected
+              className={`p-2 ${
+                selected ? "bg-blue-500 hover:bg-blue-800" : "bg-gray-500 cursor-not-allowed"
+              } text-white rounded transition-transform hover:scale-105`}
             >
               Next
             </button>
           ) : (
             <button
               onClick={onFinish}
-              className="p-2 bg-red-500 text-white rounded hover:bg-red-600 hover:scale-105 transition-transform"
+              disabled={!selected}  // Prevent finishing until an answer is chosen
+              className={`p-2 ${
+                selected ? "bg-red-500 hover:bg-red-600" : "bg-gray-500 cursor-not-allowed"
+              } text-white rounded hover:scale-105 transition-transform`}
             >
               Finish Quiz
             </button>
