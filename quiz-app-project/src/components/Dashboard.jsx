@@ -32,7 +32,7 @@ function Dashboard({ history, onStartNewQuiz }) {
   ).toFixed(2);
 
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col justify-center items-center animate-fade-in py-8 sm:py-12 px-8">
+    <div className="min-h-screen bg-gray-900 flex flex-col justify-center items-center animate-fade-in py-8 sm:py-12 px-4">
       <div className="p-6 sm:p-10 lg:p-12 bg-gray-700 text-white rounded shadow-md max-w-4xl w-full mx-4 transition-all hover:scale-[1.01]">
         <h1 className="text-2xl font-bold mb-6">User Dashboard</h1>
         
