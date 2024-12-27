@@ -12,7 +12,7 @@ function Dashboard({ history, onStartNewQuiz }) {
 
   if (!history || history.length === 0) {
     return (
-      <div className="min-h-screen py-8 sm:py-12 px-4 bg-gray-900 flex flex-col justify-center items-center animate-fade-in">
+      <div className="min-h-screen bg-gray-900 flex flex-col justify-center items-center animate-fade-in">
         <div className="p-6 bg-gray-700 text-white rounded shadow-md max-w-lg w-full mx-4 transition-all hover:scale-[1.02]">
           <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
           <p>No quiz history found. Start your first quiz now!</p>
@@ -34,7 +34,7 @@ function Dashboard({ history, onStartNewQuiz }) {
   ).toFixed(2);
 
   return (
-    <div className="min-h-screen bg-gray-900 flex flex-col justify-center items-center animate-fade-in">
+    <div className="min-h-screen flex flex-col justify-center items-center animate-fade-in">
       <div className="p-6 bg-gray-700 text-white rounded shadow-md max-w-4xl w-full mx-4 transition-all hover:scale-[1.01]">
         <h1 className="text-2xl font-bold mb-6">User Dashboard</h1>
         
