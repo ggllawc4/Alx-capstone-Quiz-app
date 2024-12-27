@@ -3,11 +3,10 @@ import React, { useState, useEffect } from "react";
 function QuestionCard({ question, options, onAnswer, onNext, onPrevious, onFinish, current, total }) {
   const [selected, setSelected] = useState(null);
   const [feedback, setFeedback] = useState("");
-  const [timeLeft, setTimeLeft] = useState(15);  // 15-second timer
-  const [disableButtons, setDisableButtons] = useState(false);  // For timer edge case
+  const [timeLeft, setTimeLeft] = useState(15);
+  const [disableButtons, setDisableButtons] = useState(false);
 
   useEffect(() => {
-    // Reset state for each new question
     setSelected(null);
     setFeedback("");
     setTimeLeft(15);
@@ -28,18 +27,18 @@ function QuestionCard({ question, options, onAnswer, onNext, onPrevious, onFinis
   }, [current]);
 
   const handleAnswer = (option) => {
-    if (disableButtons) return;  // Prevent selection if timer expired
-    const isCorrect = onAnswer(option);
+    if (disableButtons) return;
     setSelected(option);
+    const isCorrect = onAnswer(option);
     setFeedback(isCorrect ? "Correct!" : "Incorrect!");
   };
 
   const handleAutoSubmit = () => {
     setDisableButtons(true);
     if (!selected) {
-      onAnswer(null);  // Auto-submit as unanswered if no selection
+      onAnswer(null);
     }
-    setTimeout(onNext, 1000);  // Move to next question after 1 second
+    setTimeout(onNext, 1000);
   };
 
   return (
@@ -47,7 +46,7 @@ function QuestionCard({ question, options, onAnswer, onNext, onPrevious, onFinis
       <div className="p-6 bg-gray-800 rounded shadow-md max-w-lg w-full mx-4">
         <div className="flex justify-between mb-3">
           <p className="text-sm text-gray-400">Question {current} of {total}</p>
-          <p className={`text-sm ${timeLeft <= 5 ? "text-red-400" : "text-green-400"}`}>
+          <p className={`text-sm ${timeLeft <= 5 ? "text-red-500" : "text-green-400"}`}>
             Time Left: {timeLeft}s
           </p>
         </div>
@@ -77,13 +76,12 @@ function QuestionCard({ question, options, onAnswer, onNext, onPrevious, onFinis
         
         {selected && <p className="mt-4 text-lg font-bold text-white">{feedback}</p>}
         
-        {/* Navigation Buttons */}
         <div className="flex justify-between mt-6">
           {current > 1 && (
             <button
               onClick={onPrevious}
               className="p-2 bg-gray-600 hover:bg-gray-950 text-white rounded hover:scale-105 transition-transform"
-              disabled={disableButtons}  // Disable previous during auto-submit
+              disabled={disableButtons}
             >
               Previous
             </button>
@@ -91,7 +89,7 @@ function QuestionCard({ question, options, onAnswer, onNext, onPrevious, onFinis
           {current < total ? (
             <button
               onClick={onNext}
-              disabled={!selected}  // Disable if no option is selected
+              disabled={!selected}
               className={`p-2 ${
                 selected ? "bg-blue-500 hover:bg-blue-800" : "bg-gray-500 cursor-not-allowed"
               } text-white rounded transition-transform hover:scale-105`}
@@ -101,7 +99,7 @@ function QuestionCard({ question, options, onAnswer, onNext, onPrevious, onFinis
           ) : (
             <button
               onClick={onFinish}
-              disabled={!selected}  // Prevent finishing until an answer is chosen
+              disabled={!selected}
               className={`p-2 ${
                 selected ? "bg-red-500 hover:bg-red-600" : "bg-gray-500 cursor-not-allowed"
               } text-white rounded hover:scale-105 transition-transform`}
