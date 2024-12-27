@@ -42,8 +42,8 @@ function QuestionCard({ question, options, onAnswer, onNext, onPrevious, onFinis
   };
 
   return (
-    <div className="quiz-card min-h-screen bg-gray-900 flex flex-col justify-center items-center animate-fade-in">
-      <div className="p-6 bg-gray-800 rounded shadow-md max-w-lg w-full mx-4">
+    <div className="quiz-card min-h-screen flex flex-col justify-center items-center animate-fade-in">
+      <div className="p-6 bg-gray-700 rounded shadow-md max-w-lg w-full mx-4">
         <div className="flex justify-between mb-3">
           <p className="text-sm text-gray-400">Question {current} of {total}</p>
           <p className={`text-sm ${timeLeft <= 5 ? "text-red-500" : "text-green-400"}`}>

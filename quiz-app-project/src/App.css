@@ -6,5 +6,5 @@
 }
 
 .quiz-card {
-  @apply max-w-md mx-auto p-3 sm:max-w-lg lg:max-w-2xl;
+  @apply max-w-md mx-auto sm:max-w-lg lg:max-w-2xl;
 }
