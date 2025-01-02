@@ -100,10 +100,60 @@ function App() {
     }
   };
 
-  // Render loading spinner during fetch
-  if (loading) return <LoadingSpinner />;
+  // Handle answering a question
+  const handleAnswer = (option) => {
+    const currentQ = questions[currentQuestion];
+    const isCorrect = option === currentQ.correct_answer;
 
-  // Dashboard view
+    const wasCorrectBefore = currentQ.userAnswer === currentQ.correct_answer;
+    currentQ.userAnswer = option;
+
+    if (isCorrect && !wasCorrectBefore) {
+      setScore((prevScore) => prevScore + 1);
+    }
+
+    if (!isCorrect && wasCorrectBefore) {
+      setScore((prevScore) => prevScore - 1);
+    }
+    return isCorrect;
+  };
+
+  // Finish the quiz
+  const finishQuiz = () => {
+    setQuizComplete(true);
+    saveQuizResult(
+      score,
+      questions.length,
+      questions[0]?.category || "Any Category",
+      questions[0]?.difficulty
+    );
+    localStorage.removeItem("quizState");
+  };
+
+  // Save quiz results to history
+  const saveQuizResult = (score, total, category, difficulty) => {
+    const newResult = {
+      score,
+      total,
+      category,
+      difficulty,
+      date: new Date().toLocaleString(),
+    };
+    const updatedHistory = [newResult, ...quizHistory];
+    setQuizHistory(updatedHistory);
+    localStorage.setItem("quizHistory", JSON.stringify(updatedHistory));
+  };
+
+  // Go back to the main menu
+  const goToMainMenu = () => {
+    setQuestions([]);
+    setQuizComplete(false);
+    localStorage.removeItem("quizState");
+  };
+
+  // Conditional rendering based on app state
+  if (loading) return <LoadingSpinner />;
+  
   if (viewDashboard) {
     return (
       <Dashboard
@@ -113,36 +163,32 @@ function App() {
     );
   }
 
-  // Quiz complete view
   if (quizComplete) {
     return (
       <ScoreSummary
         score={score}
         total={questions.length}
         questions={questions}
-        onBack={() => setQuestions([])}
+        onBack={goToMainMenu}  // Ensures Back button works
       />
     );
   }
 
-  // Safeguard QuestionCard rendering
   if (questions.length > 0 && questions[currentQuestion]) {
-    const currentQ = questions[currentQuestion];
     return (
       <QuestionCard
-        question={decodeHtmlEntities(currentQ.question || "Question not available")}
+        question={decodeHtmlEntities(questions[currentQuestion].question || "Question not available")}
         options={shuffledOptions}
-        onAnswer={() => {}}
+        onAnswer={handleAnswer}
         onNext={() => setCurrentQuestion((prev) => prev + 1)}
         onPrevious={() => setCurrentQuestion((prev) => prev - 1)}
-        onFinish={() => {}}
+        onFinish={finishQuiz}
         current={currentQuestion + 1}
         total={questions.length}
       />
     );
   }
 
-  // Default start screen
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-grow">
