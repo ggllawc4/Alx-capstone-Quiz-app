@@ -17,8 +17,7 @@ const shuffleOptions = (options) => {
 // Utility to decode HTML entities
 function decodeHtmlEntities(text) {
   const parser = new DOMParser();
-  const decodedString = parser.parseFromString(text, "text/html").body.textContent;
-  return decodedString;
+  return parser.parseFromString(text, "text/html").body.textContent;
 }
 
 function App() {
@@ -33,10 +32,10 @@ function App() {
   );
   const [shuffledOptions, setShuffledOptions] = useState([]);
 
-  // Restore quiz state on app load (persistent state)
+  // Restore saved quiz state on load
   useEffect(() => {
     const savedState = JSON.parse(localStorage.getItem("quizState"));
-    if (savedState) {
+    if (savedState && savedState.questions?.length > 0) {
       setQuestions(savedState.questions);
       setCurrentQuestion(savedState.currentQuestion);
       setScore(savedState.score);
@@ -44,40 +43,35 @@ function App() {
     }
   }, []);
 
-  // Save quiz progress to localStorage on state change
+  // Handle shuffling options with safeguard checks
   useEffect(() => {
-    if (questions.length > 0) {
-      localStorage.setItem(
-        "quizState",
-        JSON.stringify({ questions, currentQuestion, score, quizComplete })
-      );
-    }
-  }, [questions, currentQuestion, score, quizComplete]);
-
-  // Shuffle options once when question changes
-  useEffect(() => {
-    if (questions.length > 0) {
+    if (questions.length > 0 && questions[currentQuestion]) {
+      const question = questions[currentQuestion];
+      
+      // Check if incorrect_answers and correct_answer exist
       const options = [
-        ...questions[currentQuestion].incorrect_answers,
-        questions[currentQuestion].correct_answer,
+        ...(question.incorrect_answers || []),
+        question.correct_answer,
       ].map(decodeHtmlEntities);
 
       setShuffledOptions(shuffleOptions(options));
     }
   }, [currentQuestion, questions]);
 
-  // Start Quiz - API Call with Error Handling
+  // Start Quiz - Fetch and initialize questions
   const startQuiz = async ({ category, difficulty, amount }) => {
     try {
       setLoading(true);
       const data = await fetchQuestions(amount, category, difficulty);
-      
-      if (data.length === 0) {
+
+      // Handle cases where no data is returned
+      if (!data || data.length === 0) {
         alert("No questions available. Please try different settings.");
         setLoading(false);
         return;
       }
-      
+
+      // Initialize questions and answers
       const initializedQuestions = data.map((q) => ({
         ...q,
         userAnswer: null,
@@ -89,13 +83,16 @@ function App() {
       setQuizComplete(false);
       setViewDashboard(false);
 
-      const options = [
-        ...initializedQuestions[0].incorrect_answers,
-        initializedQuestions[0].correct_answer,
-      ].map(decodeHtmlEntities);
-      setShuffledOptions(shuffleOptions(options));
+      // Safely shuffle options for the first question
+      if (initializedQuestions[0]) {
+        const options = [
+          ...(initializedQuestions[0].incorrect_answers || []),
+          initializedQuestions[0].correct_answer,
+        ].map(decodeHtmlEntities);
+        setShuffledOptions(shuffleOptions(options));
+      }
 
-      localStorage.removeItem("quizState");  // Clear previous state
+      localStorage.removeItem("quizState");  // Clear any previous quiz state
     } catch (error) {
       alert("Failed to load quiz questions. Check your internet connection.");
     } finally {
@@ -103,60 +100,10 @@ function App() {
     }
   };
 
-  const handleAnswer = (option) => {
-    const current = questions[currentQuestion];
-    const isCorrect = option === current.correct_answer;
-  
-    // Prevent multiple scoring by tracking if the question was already answered correctly
-    const wasCorrectBefore = current.userAnswer === current.correct_answer;
-  
-    // Update the user's answer
-    current.userAnswer = option;
-  
-    // If the user selects the correct answer for the first time, increment the score
-    if (isCorrect && !wasCorrectBefore) {
-      setScore((prevScore) => prevScore + 1);
-    }
-  
-    // If the user changes a previously correct answer to incorrect, decrement the score
-    if (!isCorrect && wasCorrectBefore) {
-      setScore((prevScore) => prevScore - 1);
-    }
-  
-    return isCorrect;
-  };
-
-  const finishQuiz = () => {
-    setQuizComplete(true);
-    saveQuizResult(
-      score,
-      questions.length,
-      questions[0]?.category || "Any Category",
-      questions[0]?.difficulty
-    );
-    localStorage.removeItem("quizState");  // Clear state after quiz completion
-  };
-
-  const saveQuizResult = (score, total, category, difficulty) => {
-    const newResult = {
-      score,
-      total,
-      category,
-      difficulty,
-      date: new Date().toLocaleString(),
-    };
-    const updatedHistory = [newResult, ...quizHistory];
-    setQuizHistory(updatedHistory);
-    localStorage.setItem("quizHistory", JSON.stringify(updatedHistory));
-  };
-
-  const goToMainMenu = () => {
-    setQuestions([]);
-    setQuizComplete(false);
-    localStorage.removeItem("quizState");
-  };
-
+  // Render loading spinner during fetch
   if (loading) return <LoadingSpinner />;
+
+  // Dashboard view
   if (viewDashboard) {
     return (
       <Dashboard
@@ -165,31 +112,37 @@ function App() {
       />
     );
   }
+
+  // Quiz complete view
   if (quizComplete) {
     return (
       <ScoreSummary
         score={score}
         total={questions.length}
         questions={questions}
-        onBack={goToMainMenu}
+        onBack={() => setQuestions([])}
       />
     );
   }
-  if (questions.length > 0) {
+
+  // Safeguard QuestionCard rendering
+  if (questions.length > 0 && questions[currentQuestion]) {
+    const currentQ = questions[currentQuestion];
     return (
       <QuestionCard
-        question={decodeHtmlEntities(questions[currentQuestion].question)}
+        question={decodeHtmlEntities(currentQ.question || "Question not available")}
         options={shuffledOptions}
-        onAnswer={handleAnswer}
+        onAnswer={() => {}}
         onNext={() => setCurrentQuestion((prev) => prev + 1)}
         onPrevious={() => setCurrentQuestion((prev) => prev - 1)}
-        onFinish={finishQuiz}
+        onFinish={() => {}}
         current={currentQuestion + 1}
         total={questions.length}
       />
     );
   }
 
+  // Default start screen
   return (
     <div className="flex flex-col min-h-screen">
       <main className="flex-grow">
